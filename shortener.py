@@ -2,6 +2,8 @@ import json
 import random
 import string
 
+from models import *
+
 
 class Shortener:
     """Class provides features to operate with URLs: generating, updating and extracting"""
@@ -15,10 +17,11 @@ class Shortener:
         return cls._instance
 
     def __init__(self):
-        self.__set_mapping()
+        create_table()
 
     def __set_mapping(self) -> None:
         """Launch set up mapping with shorten URLs"""
+        # todo remove
         import os
         if os.path.exists(self.__URLS_JSON):
             with open(self.__URLS_JSON, 'r') as file:
@@ -39,8 +42,7 @@ class Shortener:
         short_code = self.generate_short_code()
         while short_code in self.url_mapping:
             short_code = self.generate_short_code()
-        self.url_mapping[short_code] = original_url
-        self.update_urls_mapping_file()
+        insert_short_url(short_code, original_url)
         return short_code
 
     def delete_short_url(self, short_code: str) -> None:
@@ -48,6 +50,8 @@ class Shortener:
 
         :param short_code: code to identify url
         :raise ValueError: in case of given code doesn't exist"""
+        # delete_url(short_code)
+        # todo check if short_code doesn't exist in the db
         if short_code not in self.url_mapping:
             raise ValueError("Short URL not found")
         del self.url_mapping[short_code]

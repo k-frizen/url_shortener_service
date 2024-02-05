@@ -1,11 +1,11 @@
 import sqlite3
 
-DB_NAME = 'urls.db'
-db_connection_factory = lambda: sqlite3.connect(DB_NAME)
+_DB_NAME = 'urls.db'
+_db_connection_factory = lambda: sqlite3.connect(_DB_NAME)
 
 
 def create_table():
-    with db_connection_factory() as conn:
+    with _db_connection_factory() as conn:
         conn.execute(
             """ 
             CREATE TABLE IF NOT EXISTS shorten_urls (
@@ -17,7 +17,7 @@ def create_table():
 
 
 def insert_short_url(short_code: str, original_url: str):
-    with db_connection_factory() as conn:
+    with _db_connection_factory() as conn:
         conn.execute("""
             INSERT INTO shorten_urls (short_code, original_url)
             VALUES (?, ?)
@@ -26,7 +26,7 @@ def insert_short_url(short_code: str, original_url: str):
 
 
 def delete_url(short_code: str):
-    with db_connection_factory() as conn:
+    with _db_connection_factory() as conn:
         conn.execute("""
             DELETE FROM shorten_urls
             WHERE short_code=?            
