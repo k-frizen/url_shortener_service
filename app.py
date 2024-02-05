@@ -4,12 +4,18 @@ from flask import Flask, request, jsonify, redirect
 
 from middleware import setup_request_logger
 from shortener import Shortener
+import ecs_logging
 
 app = Flask(__name__)
 shortener = Shortener()
 
 setup_request_logger(app)
-logging.basicConfig(filename='access.log', level=logging.INFO)
+logger = logging.getLogger('user_requests')
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+handler.setFormatter(ecs_logging.StdlibFormatter())
+logger.addHandler(handler)
 
 
 @app.route('/api/url', methods=['PUT'])

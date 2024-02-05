@@ -1,7 +1,8 @@
-import logging
 from datetime import datetime
 
 from flask import request
+
+from app import logger
 
 
 class RequestLoggerMiddleware:
@@ -25,7 +26,7 @@ class RequestLoggerMiddleware:
             "ip": request.remote_addr,
             "status": status
         }
-        logging.info(log_data)
+        logger.info(log_data)
 
 
 def setup_request_logger(app):
