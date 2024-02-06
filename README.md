@@ -22,7 +22,7 @@ purposes.
 
 1. Clone the repository:
 
-   git clone https://github.com/yourusername/url-shortener.git
+   ```git clone https://github.com/yourusername/url-shortener.git```
 
 2. Change into the project directory:
    ```cd url-shortener```
