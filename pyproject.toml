@@ -3,11 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "url-shortner-"
-dynamic = ["version"]
+name = "url-shortner"
+version = "1.0.0"
 description = 'API to convert standart URL into shorten one'
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">3.10"
 license = "MIT"
 keywords = []
 authors = [
@@ -24,15 +24,15 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+    "Flask~=3.0.1",
+    "ecs-logging",
+]
 
 [project.urls]
-Documentation = "https://github.com/unknown/url-shortner-#readme"
-Issues = "https://github.com/unknown/url-shortner-/issues"
-Source = "https://github.com/unknown/url-shortner-"
-
-[tool.hatch.version]
-path = "src/url_shortner_/__about__.py"
+Documentation = "https://github.com/unknown/url-shortner#readme"
+Issues = "https://github.com/unknown/url-shortner/issues"
+Source = "https://github.com/unknown/url-shortner"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -40,6 +40,7 @@ dependencies = [
   "pytest",
 ]
 [tool.hatch.envs.default.scripts]
+app = "python -m url_shortner.app"
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
 cov-report = [
@@ -59,10 +60,10 @@ dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/url_shortner_ tests}"
+check = "mypy --install-types --non-interactive {args:url_shortner tests}"
 
 [tool.coverage.run]
-source_pkgs = ["url_shortner_", "tests"]
+source_pkgs = ["url_shortner", "tests"]
 branch = true
 parallel = true
 omit = [
@@ -70,8 +71,8 @@ omit = [
 ]
 
 [tool.coverage.paths]
-url_shortner_ = ["src/url_shortner_", "*/url-shortner-/src/url_shortner_"]
-tests = ["tests", "*/url-shortner-/tests"]
+url_shortner_ = ["src/url_shortner_", "*/url-shortner/src/url_shortner_"]
+tests = ["tests", "*/url-shortner/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

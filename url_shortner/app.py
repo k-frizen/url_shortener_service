@@ -1,13 +1,13 @@
 import logging
+import string
 
+import ecs_logging
 from flask import Flask, request, jsonify, redirect
 
-from middleware import setup_request_logger
-from shortener import Shortener
-import ecs_logging
+from url_shortner.middleware import setup_request_logger
+from url_shortner.models import *
 
 app = Flask(__name__)
-shortener = Shortener()
 
 setup_request_logger(app)
 logger = logging.getLogger('user_requests')
@@ -29,8 +29,11 @@ def create_short_url():
     url = data.get('url')
 
     try:
-        short_code = shortener.create_short_url(url)
+        short_code = generate_short_code()
+        while not is_unique_url(short_code):
+            short_code = generate_short_code()
         short_url = f"http://127.0.0.1:5000/{short_code}"
+        insert_short_url(short_url, url)
         return jsonify({"url": short_url}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -45,7 +48,7 @@ def delete_short_url(short_code):
     :raise ValueError: If the provided short code does not exist, return HTTP 500 with an error message.
     """
     try:
-        shortener.delete_short_url(short_code)
+        delete_url(short_code)
         return 'OK', 200
     except ValueError:
         return jsonify({"error": "URL not found"}), 500
@@ -57,10 +60,19 @@ def redirect_to_original_url(short_code):
 
     :param short_code: The short code identifying the short URL to be redirected
     """
-    redirect_url = shortener.get_redirect_info(short_code)
+    redirect_url = get_redirect_info(short_code)
     if redirect_url is not None:
         return redirect(redirect_url, code=302)
     return jsonify({"error": "URL not found"}), 404
+
+
+def generate_short_code(length: int = 6) -> str:
+    """Create unique short code to identify URL
+
+    :param length: amount of symbols in the result code"""
+    import random
+    characters = string.ascii_uppercase + string.ascii_lowercase + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 
 if __name__ == '__main__':

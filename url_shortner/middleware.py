@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from flask import request
+import logging
 
-from app import logger
+logger = logging.getLogger(__name__)
 
 
 class RequestLoggerMiddleware:

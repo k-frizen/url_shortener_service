@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from app import app
+from url_shortner.app import app
 
 
 class TestApp(unittest.TestCase):
